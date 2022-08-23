@@ -1,0 +1,22 @@
+services:
+  mysql:
+    container_name: spring-cloud-mysql-db
+    image: mysql:5.7
+    volumes:
+      - spring-cloud-mysql:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: spring_microservices
+
+  customer:
+    container_name: customer-service
+    depends_on:
+      - mysql
+    build: /customer
+    ports:
+      - 8080:8080
+    environment:
+      MYSQL_HOST: mysql
+
+volumes:
+  spring-cloud-mysql:
