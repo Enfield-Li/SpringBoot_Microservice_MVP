@@ -17,6 +17,12 @@ services:
       - 8080:8080
     environment:
       MYSQL_HOST: mysql
+      SPRING_APPLICATION_JSON: '{
+        "spring.datasource.url=jdbc:mysql": "//jdbc:mysql:3306/spring_microservices_customer",
+        "spring.datasource.username": "root",
+        "spring.datasource.password": "password",
+        "spring.jpa.hibernate.ddl-auto": "update"
+        }'
 
   fraud:
     container_name: fraud-service
@@ -27,6 +33,12 @@ services:
       - 8081:8081
     environment:
       MYSQL_HOST: mysql
+      SPRING_APPLICATION_JSON: '{
+        "spring.datasource.url=jdbc:mysql": "//jdbc:mysql:3306/spring_microservices_fraud",
+        "spring.datasource.username": "root",
+        "spring.datasource.password": "password",
+        "spring.jpa.hibernate.ddl-auto": "update"
+        }'
 
 # volumes:
 #   multi-module-microservices:
