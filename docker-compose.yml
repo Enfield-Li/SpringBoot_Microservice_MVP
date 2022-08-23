@@ -3,10 +3,10 @@ services:
     container_name: multi-module-microservices-db
     image: mysql:5.7
     volumes:
-      - multi-module-microservices:/var/lib/mysql
+      # - multi-module-microservices:/var/lib/mysql
+      - ./docker/mysql/init:/docker-entrypoint-initdb.d
     environment:
       MYSQL_ROOT_PASSWORD: password
-      MYSQL_DATABASE: spring_microservices
 
   customer:
     container_name: customer-service
@@ -18,5 +18,15 @@ services:
     environment:
       MYSQL_HOST: mysql
 
-volumes:
-  multi-module-microservices:
+  fraud:
+    container_name: fraud-service
+    depends_on:
+      - mysql
+    build: /fraud
+    ports:
+      - 8081:8081
+    environment:
+      MYSQL_HOST: mysql
+
+# volumes:
+#   multi-module-microservices:
