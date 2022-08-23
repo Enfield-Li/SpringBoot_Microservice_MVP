@@ -1,9 +1,9 @@
 services:
   mysql:
-    container_name: spring-cloud-mysql-db
+    container_name: multi-module-microservices-db
     image: mysql:5.7
     volumes:
-      - spring-cloud-mysql:/var/lib/mysql
+      - multi-module-microservices:/var/lib/mysql
     environment:
       MYSQL_ROOT_PASSWORD: password
       MYSQL_DATABASE: spring_microservices
@@ -19,4 +19,4 @@ services:
       MYSQL_HOST: mysql
 
 volumes:
-  spring-cloud-mysql:
+  multi-module-microservices:
