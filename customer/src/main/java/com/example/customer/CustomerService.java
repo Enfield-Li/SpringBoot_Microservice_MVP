@@ -14,8 +14,7 @@ import org.springframework.web.client.RestTemplate;
 public class CustomerService {
 
   private final CustomerRepository customerRepository;
-
-  // private final RestTemplate restTemplate;
+  private final RestTemplate restTemplate;
 
   //   private final FraudClient fraudClient;
   //   private final RabbitMQMessageProducer rabbitMQMessageProducer;
@@ -29,19 +28,16 @@ public class CustomerService {
 
     customerRepository.saveAndFlush(customer);
     // Customer savedCustomer = customerRepository.save(customer);
-    // System.out.println(customer);
-    // System.out.println("***************");
-    // System.out.println(savedCustomer);
 
-    // FraudCheckResponse fraudcheckRespose = restTemplate.getForObject(
-    //   "http://FRAUD/api/v1/fraud-check/{customerId}",
-    //   FraudCheckResponse.class,
-    //   customer.getId()
-    // );
+    FraudCheckResponse fraudcheckRespose = restTemplate.getForObject(
+      "http://localhost:8081/api/v1/fraud-check/{customerId}",
+      FraudCheckResponse.class,
+      customer.getId()
+    );
 
-    // if (fraudcheckRespose.isFraudster()) {
-    //   throw new IllegalStateException("fraudster");
-    // }
+    if (fraudcheckRespose.getIsFraudster()) {
+      throw new IllegalStateException("fraudster");
+    }
     //     // todo: check if email valid
     //     // todo: check if email not taken
     // customerRepository.saveAndFlush(customer);

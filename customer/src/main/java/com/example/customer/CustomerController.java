@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 @Log4j2
 @RestController
-@RequestMapping("api/v1/customers")
 @RequiredArgsConstructor
+@RequestMapping("api/v1/customers")
 class CustomerController {
 
   private final CustomerService customerService;
