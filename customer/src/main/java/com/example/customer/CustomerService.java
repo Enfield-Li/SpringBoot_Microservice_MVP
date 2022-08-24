@@ -1,11 +1,8 @@
 package com.example.customer;
 
+import com.example.clients.fraud.FraudCheckResponse;
+import com.example.clients.fraud.FraudClient;
 import lombok.AllArgsConstructor;
-// import com.amigoscode.amqp.RabbitMQMessageProducer;
-// import com.amigoscode.clients.fraud.FraudCheckResponse;
-// import com.amigoscode.clients.fraud.FraudClient;
-// import com.amigoscode.clients.notification.NotificationClient;
-// import com.amigoscode.clients.notification.NotificationRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -15,8 +12,8 @@ public class CustomerService {
 
   private final CustomerRepository customerRepository;
   private final RestTemplate restTemplate;
+  private final FraudClient fraudClient;
 
-  //   private final FraudClient fraudClient;
   //   private final RabbitMQMessageProducer rabbitMQMessageProducer;
 
   public void registerCustomer(CustomerRegistrationRequest request) {
@@ -29,11 +26,14 @@ public class CustomerService {
     customerRepository.saveAndFlush(customer);
     // Customer savedCustomer = customerRepository.save(customer);
 
-    FraudCheckResponse fraudcheckRespose = restTemplate.getForObject(
-      "http://FRAUD-SERVICE/api/v1/fraud-check/{customerId}",
-      FraudCheckResponse.class,
+    FraudCheckResponse fraudcheckRespose = fraudClient.isFraudster(
       customer.getId()
     );
+    // FraudCheckResponse fraudcheckRespose = restTemplate.getForObject(
+    //   "http://FRAUD-SERVICE/api/v1/fraud-check/{customerId}",
+    //   FraudCheckResponse.class,
+    //   customer.getId()
+    // );
 
     if (fraudcheckRespose.getIsFraudster()) {
       throw new IllegalStateException("fraudster");
