@@ -7,11 +7,18 @@ services:
       - ./docker/mysql/init:/docker-entrypoint-initdb.d
     environment:
       MYSQL_ROOT_PASSWORD: password
+  
+  eureka-server:
+    container_name: eureka-server
+    build: /eureka-server
+    ports:
+      - "8761:8761"
 
   customer:
     container_name: customer-service
     depends_on:
       - mysql
+      - eureka-server
     build: /customer
     ports:
       - 8080:8080
@@ -28,6 +35,7 @@ services:
     container_name: fraud-service
     depends_on:
       - mysql
+      - eureka-server
     build: /fraud
     ports:
       - 8081:8081
