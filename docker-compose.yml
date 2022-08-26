@@ -12,6 +12,7 @@ services:
     container_name: customer-service
     depends_on:
       - mysql
+    restart: on-failure
     build: /customer
     ports:
       - 8080:8080
@@ -28,6 +29,7 @@ services:
     container_name: fraud-service
     depends_on:
       - mysql
+    restart: on-failure
     build: /fraud
     ports:
       - 8081:8081
