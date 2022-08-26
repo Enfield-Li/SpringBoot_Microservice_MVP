@@ -9,16 +9,19 @@
 
 	<modules>
 		<module>customer</module>
-	  <module>fraud</module>
-  </modules>
+		<module>fraud</module>
+	</modules>
 
 	<name>muti-module</name>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<java.version>8</java.version>
-		<spring.boot.maven.plugin.version>2.5.7</spring.boot.maven.plugin.version>
+		<java.version>1.8</java.version>
+		<!-- https://www.baeldung.com/maven-java-version -->
+		<maven.compiler.target>1.8</maven.compiler.target>
+		<maven.compiler.source>1.8</maven.compiler.source>
 		<spring.boot.dependencies.version>2.5.7</spring.boot.dependencies.version>
+		<spring.cloud-version>2020.0.3</spring.cloud-version>
 	</properties>
 
 	<dependencyManagement>
@@ -27,8 +30,8 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-dependencies</artifactId>
 				<version>${spring.boot.dependencies.version}</version>
-				<type>pom</type>
 				<scope>import</scope>
+				<type>pom</type>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
@@ -55,11 +58,7 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
-			</plugin>
-			<plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
-				<version>${spring.boot.maven.plugin.version}</version>
+				<!-- Important! Otherwise, docker won't run jar -->
 				<executions>
 					<execution>
 						<goals>
