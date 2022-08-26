@@ -13,6 +13,7 @@ services:
     build: /eureka-server
     ports:
       - "8761:8761"
+    restart: on-failure
 
   customer:
     container_name: customer-service
@@ -22,6 +23,7 @@ services:
     build: /customer
     ports:
       - 8080:8080
+    restart: on-failure
     environment:
       MYSQL_HOST: mysql
       SPRING_APPLICATION_JSON: '{
@@ -39,6 +41,7 @@ services:
     build: /fraud
     ports:
       - 8081:8081
+    restart: on-failure
     environment:
       MYSQL_HOST: mysql
       SPRING_APPLICATION_JSON: '{
