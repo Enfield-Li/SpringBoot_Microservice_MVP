@@ -8,5 +8,10 @@
     <modelVersion>4.0.0</modelVersion>
     <packaging>jar</packaging>
     <artifactId>clients</artifactId>
-    
+
+    <!-- https://stackoverflow.com/a/55299171/16648127 -->
+    <properties>
+        <spring-boot.repackage.skip>true</spring-boot.repackage.skip>
+    </properties>
+
 </project>
