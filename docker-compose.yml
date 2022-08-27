@@ -1,12 +1,4 @@
-# Spring Profiles & SpringBoot External config
-# https://www.baeldung.com/spring-profiles
-# https://www.baeldung.com/properties-with-spring
-# https://docs.spring.io/spring-boot/docs/current/reference/html/features.html#features.external-config.files.profile-specific
-# https://stackoverflow.com/questions/60565706/how-to-load-the-spring-profiles-active-value-in-the-client-service-dynamically
-# https://stackoverflow.com/questions/25855795/spring-boot-and-multiple-external-configuration-files#:~:text=To%20add%20different%20files%20you,or%20file%20location%20(directories).&text=The%20one%20above%20will%20add,will%20be%20consulted%20for%20application.
-
-# Eureka-server docker environment endpoint
-# https://github.com/spring-cloud/spring-cloud-netflix/issues/2442
+# https://stackoverflow.com/a/73508528/16648127
 
 services:
   mysql:
