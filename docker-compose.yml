@@ -28,7 +28,7 @@ services:
       - "15672:15672"
 
   eureka-server:
-    container_name: eureka-server
+    container_name: eureka
     depends_on:
       - zipkin
     build: /eureka-server
@@ -39,7 +39,7 @@ services:
       spring.zipkin.baseurl: http://zipkin:9411
 
   customer:
-    container_name: customer-service
+    container_name: customer
     depends_on:
       - mysql
       - eureka-server
@@ -62,7 +62,7 @@ services:
         }'
 
   fraud:
-    container_name: fraud-service
+    container_name: fraud
     depends_on:
       - mysql
       - eureka-server
