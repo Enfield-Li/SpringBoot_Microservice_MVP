@@ -71,7 +71,8 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
-				<!-- https://stackoverflow.com/q/42921490/16648127 -->
+				<!-- https://stackoverflow.com/q/42921490/16648127
+					https://www.baeldung.com/spring-boot-repackage-vs-mvn-package -->
 				<executions>
 					<execution>
 						<goals>
