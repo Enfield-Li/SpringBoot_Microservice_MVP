@@ -9,17 +9,19 @@ services:
       - ./docker/mysql/init:/docker-entrypoint-initdb.d
     environment:
       MYSQL_ROOT_PASSWORD: password
-  
+
   zipkin:
     container_name: zipkin
     image: openzipkin/zipkin
-    ports:
-      - 9411:9411
+    expose:
+      - 9411
+    # ports:
+    #   - 9411:9411
     # environment:
     #   - STORAGE_TYPE=mysql
     #   # Point the zipkin at the storage backend
     #   - MYSQL_HOST=mysql
-  
+
   rabbitmq:
     container_name: rabbitmq
     image: rabbitmq:3.10.7-management-alpine
@@ -34,9 +36,24 @@ services:
     build: /eureka-server
     ports:
       - "8761:8761"
-    restart: on-failure
     environment:
       spring.zipkin.baseurl: http://zipkin:9411
+
+  api-gateway:
+    container_name: api-gateway
+    depends_on:
+      - zipkin
+      - eureka-server
+    build: /apigateway
+    ports:
+      - 8083:8083
+    environment:
+      SPRING_APPLICATION_JSON: '{
+        "spring.cloud.gateway.routes[0].uri": "lb://customer",
+        "spring.cloud.gateway.routes[0].predicates[0]": "Path=/api/v1/customers/**",
+        "eureka.client.service-url.defaultZone": "http://eureka-server:8761/eureka",
+        "spring.zipkin.baseurl": "http://zipkin:9411"
+        }'
 
   customer:
     container_name: customer
@@ -45,9 +62,10 @@ services:
       - eureka-server
       - zipkin
     build: /customer
-    ports:
-      - 8080:8080
-    restart: on-failure
+    expose:
+      - 8080
+    # ports:
+    #   - 8080:8080
     environment:
       MYSQL_HOST: mysql
       SPRING_PROFILES_ACTIVE: docker
@@ -68,9 +86,10 @@ services:
       - eureka-server
       - zipkin
     build: /fraud
-    ports:
-      - 8081:8081
-    restart: on-failure
+    expose:
+      - 8081
+    # ports:
+    #   - 8081:8081
     environment:
       MYSQL_HOST: mysql
       SPRING_PROFILES_ACTIVE: docker
@@ -82,6 +101,5 @@ services:
         "eureka.client.service-url.defaultZone": "http://eureka-server:8761/eureka",
         "spring.zipkin.baseurl": "http://zipkin:9411"
         }'
-        
 # volumes:
 #   multi-module-microservices:

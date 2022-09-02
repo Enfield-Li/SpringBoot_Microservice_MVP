@@ -12,6 +12,7 @@
 		<module>fraud</module>
 		<module>eureka-server</module>
 		<module>clients</module>
+		<module>apigateway</module>
 	</modules>
 
 	<name>muti-module</name>
