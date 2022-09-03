@@ -13,10 +13,10 @@ services:
   zipkin:
     container_name: zipkin
     image: openzipkin/zipkin
-    expose:
-      - 9411
-    # ports:
-    #   - 9411:9411
+    # expose:
+    #   - 9411
+    ports:
+      - 9411:9411
     # environment:
     #   - STORAGE_TYPE=mysql
     #   # Point the zipkin at the storage backend
@@ -26,8 +26,8 @@ services:
     container_name: rabbitmq
     image: rabbitmq:3.10.7-management-alpine
     ports:
-      - "5672:5672"
-      - "15672:15672"
+      - 5672:5672
+      - 15672:15672
 
   eureka-server:
     container_name: eureka
@@ -35,7 +35,7 @@ services:
       - zipkin
     build: /eureka-server
     ports:
-      - "8761:8761"
+      - 8761:8761
     environment:
       spring.zipkin.baseurl: http://zipkin:9411
 
