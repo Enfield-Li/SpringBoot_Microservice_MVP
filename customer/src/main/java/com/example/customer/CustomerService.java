@@ -1,20 +1,23 @@
 package com.example.customer;
 
+import static com.example.amqp.exchange.Notification.*;
+
+import com.example.amqp.RabbitMqMessageProducer;
 import com.example.clients.fraud.FraudCheckResponse;
 import com.example.clients.fraud.FraudClient;
-import lombok.AllArgsConstructor;
+import com.example.clients.notification.NotificationRequest;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class CustomerService {
 
-  private final CustomerRepository customerRepository;
-  private final RestTemplate restTemplate;
   private final FraudClient fraudClient;
-
-  //   private final RabbitMQMessageProducer rabbitMQMessageProducer;
+  private final RestTemplate restTemplate;
+  private final CustomerRepository customerRepository;
+  private final RabbitMqMessageProducer rabbitMQMessageProducer;
 
   public void registerCustomer(CustomerRegistrationRequest request) {
     Customer customer = Customer
@@ -26,7 +29,7 @@ public class CustomerService {
     customerRepository.saveAndFlush(customer);
     // Customer savedCustomer = customerRepository.save(customer);
 
-    FraudCheckResponse fraudcheckRespose = fraudClient.isFraudster(
+    FraudCheckResponse fraudCheckResponse = fraudClient.isFraudster(
       customer.getId()
     );
     // FraudCheckResponse fraudcheckRespose = restTemplate.getForObject(
@@ -35,29 +38,20 @@ public class CustomerService {
     //   customer.getId()
     // );
 
-    if (fraudcheckRespose.getIsFraudster()) {
+    if (fraudCheckResponse.getIsFraudster()) {
       throw new IllegalStateException("fraudster");
     }
-    //     // todo: check if email valid
-    //     // todo: check if email not taken
-    // customerRepository.saveAndFlush(customer);
-    //     FraudCheckResponse fraudCheckResponse = fraudClient.isFraudster(
-    //       customer.getId()
-    //     );
 
-    //     if (fraudCheckResponse.isFraudster()) {
-    //       throw new IllegalStateException("fraudster");
-    //     }
+    NotificationRequest notificationPayload = new NotificationRequest(
+      customer.getId(),
+      customer.getEmail(),
+      String.format("Hi %s, welcome ", customer.getUsername())
+    );
 
-    //     NotificationRequest notificationRequest = new NotificationRequest(
-    //       customer.getId(),
-    //       customer.getEmail(),
-    //       String.format("Hi %s, welcome to Amigoscode...", customer.getFirstName())
-    //     );
-    //     rabbitMQMessageProducer.publish(
-    //       notificationRequest,
-    //       "internal.exchange",
-    //       "internal.notification.routing-key"
-    //     );
+    rabbitMQMessageProducer.publish(
+      internalExchange,
+      notificationRoutingKey,
+      notificationPayload
+    );
   }
 }

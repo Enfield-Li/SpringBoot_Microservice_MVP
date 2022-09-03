@@ -13,6 +13,8 @@
 		<module>eureka-server</module>
 		<module>clients</module>
 		<module>apigateway</module>
+		<module>notification</module>
+		<module>amqp</module>
 	</modules>
 
 	<name>muti-module</name>
