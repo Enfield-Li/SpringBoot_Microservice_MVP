@@ -1,3 +1,6 @@
+zipkin: http://localhost:9411/zipkin
+eureka: http://localhost:8761/
+
 Openfein: 
     1. Make services talk to each other, a client module decouple info to itself for services to communicate
     
