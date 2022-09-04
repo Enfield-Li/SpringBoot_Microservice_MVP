@@ -15,6 +15,7 @@ import lombok.NoArgsConstructor;
 public class Notification {
 
   @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Integer notificationId;
 
   private Integer toCustomerId;
