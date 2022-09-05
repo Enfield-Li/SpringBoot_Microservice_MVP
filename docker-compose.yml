@@ -5,7 +5,7 @@ services:
     container_name: multi-module-microservices-db
     image: mysql:5.7
     volumes:
-      # - multi-module-microservices:/var/lib/mysql # volum
+      # https://stackoverflow.com/a/52899915/16648127
       - ./docker/mysql/init:/docker-entrypoint-initdb.d
     environment:
       MYSQL_ROOT_PASSWORD: password
@@ -13,14 +13,8 @@ services:
   zipkin:
     container_name: zipkin
     image: openzipkin/zipkin
-    # expose:
-    #   - 9411
     ports:
       - 9411:9411
-    # environment:
-    #   - STORAGE_TYPE=mysql
-    #   # Point the zipkin at the storage backend
-    #   - MYSQL_HOST=mysql
 
   rabbitmq:
     container_name: rabbitmq
@@ -65,8 +59,6 @@ services:
     build: /customer
     expose:
       - 8080
-    # ports:
-    #   - 8080:8080
     environment:
       MYSQL_HOST: mysql
       SPRING_PROFILES_ACTIVE: docker
@@ -90,8 +82,6 @@ services:
     build: /fraud
     expose:
       - 8081
-    # ports:
-    #   - 8081:8081
     environment:
       MYSQL_HOST: mysql
       SPRING_PROFILES_ACTIVE: docker
@@ -113,8 +103,6 @@ services:
     build: /notification
     expose:
       - 8082
-    # ports:
-    #   - 8082:8082
     environment:
       MYSQL_HOST: mysql
       SPRING_PROFILES_ACTIVE: docker
@@ -128,5 +116,3 @@ services:
         "spring.zipkin.baseUrl": "http://zipkin:9411",
         "spring.rabbitmq.addresses": "rabbitmq:5672"
         }'
-# volumes:
-#   multi-module-microservices:
