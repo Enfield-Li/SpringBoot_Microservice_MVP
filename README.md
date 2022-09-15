@@ -10,7 +10,7 @@
 
 ```
 SpringBoot、
-SpringCloud（Spring cloud Gateway、Eureka server、OpenFeign、Sleuth-Zipkin)、
+SpringCloud（Spring cloud Gateway、Spring AMQP、Eureka server、OpenFeign、Sleuth-Zipkin)、
 Docker（Docker-compose）
 ```
 
@@ -26,7 +26,7 @@ Docker（Docker-compose）
 |                  |        +------------------+                 +----------------+                    +------------------+
 |                  |        |                  | Sync connection |                |   Async message    |                  |
 |     Gateway      |------->|   Fraud check    |---------------->|    Customer    |------------------->|   Notification   |
-|                  |        |                  |                 |                |   (Spring AMQP)    |                  |
+|  (LoadBalancer)  |        |                  |                 |                |   (Spring AMQP)    |                  |
 |                  |        +------------------+                 +----------------+          |         +------------------+
 |                  |                                                                         |
 |                  |                                                                         |
@@ -40,11 +40,11 @@ Docker（Docker-compose）
                                                                  v
                      +---------------------------------------------------------------------------------------+
                      |                                                                                       |
-                     |                       +---------------+                                               |
-                     |  +----------+  Send   |               | Bind   +---------+ Receive  +--------------+  |
-                     |  | Customer |-------->|   Exchange    |------->|  Queue  |--------->| Notification |  |
-                     |  +----------+         |               |        +---------+ (Async)  +--------------+  |
-                     |    Producer           +---------------+                                 Consumer      |
+                     |                       +--------------+                                                |
+                     |  +----------+  Send   |              |  Bind  +---------+  Receive  +--------------+  |
+                     |  | Customer |-------->|   Exchange   |------->|  Queue  |---------->| Notification |  |
+                     |  +----------+         |              |        +---------+  (Async)  +--------------+  |
+                     |    Producer           +--------------+                                  Consumer      |
                      |                                                                                       |
                      +---------------------------------------------------------------------------------------+
 ```
@@ -65,7 +65,7 @@ docker-compose.yml 文件：
         SPRING_PROFILES_ACTIVE: docker
 ```
 
-- 方法二：通过 [compose environment](https://docs.docker.com/compose/compose-file/#environment) 覆盖开发环境的 `application.properties` 值，举例（使用两种不同的语法）：
+- 方法二：开发环境使用本地 `.env` 文件加载所需变量，Docker 环境通过 [compose environment](https://docs.docker.com/compose/compose-file/#environment) 覆盖开发环境的 `application.properties` 值，举例（使用两种不同的语法）：
 
 ```
 docker-compose.yml 文件：
@@ -120,7 +120,7 @@ A Demo project for both synchronous connection and asynchronous messaging betwee
 
 ```
 SpringBoot,
-SpringCloud (Spring cloud gateway, Eureka server, OpenFeign, Sleuth-Zipkin),
+SpringCloud (Spring cloud gateway, Spring AMQP, Eureka server, OpenFeign, Sleuth-Zipkin),
 Docker (Docker-compose)
 ```
 
@@ -136,7 +136,7 @@ Docker (Docker-compose)
 |                  |        +------------------+                 +----------------+                    +------------------+
 |                  |        |                  | Sync connection |                |   Async message    |                  |
 |     Gateway      |------->|   Fraud check    |---------------->|    Customer    |------------------->|   Notification   |
-|                  |        |                  |                 |                |   (Spring AMQP)    |                  |
+|  (LoadBalancer)  |        |                  |                 |                |   (Spring AMQP)    |                  |
 |                  |        +------------------+                 +----------------+          |         +------------------+
 |                  |                                                                         |
 |                  |                                                                         |
@@ -148,15 +148,15 @@ Docker (Docker-compose)
                                                                  |
                                                                  |
                                                                  v
-                     +----------------------------------------------------------------------------------------+
-                     |                                                                                        |
-                     |                       +---------------+                                                |
-                     |  +----------+  Send   |               | Bind   +---------+ Receive   +--------------+  |
-                     |  | Customer |-------->|   Exchange    |------->|  Queue  |---------->| Notification |  |
-                     |  +----------+         |               |        +---------+ (Async)   +--------------+  |
-                     |    Producer           +---------------+                                  Consumer      |
-                     |                                                                                        |
-                     +----------------------------------------------------------------------------------------+
+                     +---------------------------------------------------------------------------------------+
+                     |                                                                                       |
+                     |                       +--------------+                                                |
+                     |  +----------+  Send   |              |  Bind  +---------+  Receive  +--------------+  |
+                     |  | Customer |-------->|   Exchange   |------->|  Queue  |---------->| Notification |  |
+                     |  +----------+         |              |        +---------+  (Async)  +--------------+  |
+                     |    Producer           +--------------+                                  Consumer      |
+                     |                                                                                       |
+                     +---------------------------------------------------------------------------------------+
 ```
 
 ## 3. Solving variables between dev and Docker environment:
@@ -175,7 +175,7 @@ docker-compose.yml：
         SPRING_PROFILES_ACTIVE: docker
 ```
 
-- Method two: By using [compose environment](https://docs.docker.com/compose/compose-file/#environment) in an attempt to override the values in `application.properties` from dev environment. eg with different syntax:
+- Method two: Dev utilize `.env` file to load required variable, and then the Docker environment uses [compose environment](https://docs.docker.com/compose/compose-file/#environment) in an attempt to override the values in `application.properties` from dev environment. eg with different syntax:
 
 ```
 docker-compose.yml：
