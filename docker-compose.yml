@@ -27,7 +27,7 @@ services:
     container_name: eureka
     depends_on:
       - zipkin
-    build: /eureka-server
+    build: ./eureka-server
     ports:
       - 8761:8761
     environment:
@@ -39,7 +39,7 @@ services:
       - zipkin
       - eureka-server
       - customer
-    build: /apigateway
+    build: ./apigateway
     ports:
       - 8083:8083
     environment:
@@ -56,7 +56,7 @@ services:
       - mysql
       - eureka-server
       - zipkin
-    build: /customer
+    build: ./customer
     expose:
       - 8080
     environment:
@@ -79,7 +79,7 @@ services:
       - mysql
       - eureka-server
       - zipkin
-    build: /fraud
+    build: ./fraud
     expose:
       - 8081
     environment:
@@ -100,7 +100,7 @@ services:
       - mysql
       - eureka-server
       - zipkin
-    build: /notification
+    build: ./notification
     expose:
       - 8082
     environment:
